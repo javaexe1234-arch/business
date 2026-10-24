@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { readJson } from "../api.js";
 
 const STEPS = [
   {
@@ -51,7 +52,7 @@ export default function QuizWidget() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: nextMessages, quiz: nextQuiz }),
       });
-      const data = await response.json();
+      const data = await readJson(response);
       const text = data.text || "Давайте продолжим квиз — так быстрее соберём заявку.";
       setMessages([...nextMessages, { role: "assistant", content: text }]);
     } catch {
@@ -100,7 +101,7 @@ export default function QuizWidget() {
           quiz,
         }),
       });
-      const data = await response.json();
+      const data = await readJson(response);
       if (!response.ok) throw new Error(data.error || "Не удалось отправить");
       setDone(true);
       setMessages((current) => [

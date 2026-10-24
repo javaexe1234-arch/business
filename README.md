@@ -1,6 +1,6 @@
 # Чертёж — лендинг веб-студии с ИИ-квизом
 
-Продающий сайт студии: оффер, преимущества, отзывы, FAQ, форма заявки, ИИ-помощник на Gemini и админка `/admin`. Заявки сохраняются на сервере и дублируются в Telegram-группу.
+Продающий сайт студии: оффер, преимущества, отзывы, FAQ, форма заявки, ИИ-помощник на Gemini и админка `/admin`. Заявки хранятся в Turso и дублируются в Telegram-группу.
 
 ## Запуск
 
@@ -34,8 +34,20 @@ npm start
 | `GEMINI_API_KEY` | Ключ Gemini. Модель: `gemini-3.5-flash-lite` |
 | `TELEGRAM_BOT_TOKEN` | Токен бота |
 | `TELEGRAM_CHAT_ID` | ID группы, куда падают заявки |
+| `TURSO_DATABASE_URL` | URL базы Turso (`libsql://…`) |
+| `TURSO_AUTH_TOKEN` | Токен доступа Turso |
 
-Без ключа Gemini квиз всё равно собирает заявку, ответы идут из запасных фраз. Без Telegram заявка всё равно сохраняется в админке.
+Без ключа Gemini квиз всё равно собирает заявку, ответы идут из запасных фраз. Без Telegram заявка всё равно сохраняется в Turso.
+
+## Turso
+
+1. Установите CLI: `npm i -g @turso/cli` и выполните `turso auth login`.
+2. Создайте базу: `turso db create chertyozh-leads`.
+3. Скопируйте URL: `turso db show chertyozh-leads --url` → `TURSO_DATABASE_URL`.
+4. Создайте токен: `turso db tokens create chertyozh-leads` → `TURSO_AUTH_TOKEN`.
+5. Перезапустите `npm run dev`.
+
+Таблица `leads` создаётся автоматически при первой заявке.
 
 ## Telegram-группа
 

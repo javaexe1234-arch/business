@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header.jsx";
+import { readJson } from "../api.js";
 
 const statusLabel = {
   new: "новая",
@@ -14,14 +15,19 @@ export default function AdminPage() {
   const [leads, setLeads] = useState([]);
 
   async function loadLeads() {
-    const response = await fetch("/api/leads", { credentials: "include" });
-    if (response.status === 401) {
-      setAuthed(false);
-      return;
+    try {
+      const response = await fetch("/api/leads", { credentials: "include" });
+      if (response.status === 401) {
+        setAuthed(false);
+        return;
+      }
+      const data = await readJson(response);
+      if (!response.ok) throw new Error(data.error || "Не удалось загрузить заявки");
+      setLeads(data.leads || []);
+      setAuthed(true);
+    } catch (err) {
+      setError(err.message);
     }
-    const data = await response.json();
-    setLeads(data.leads || []);
-    setAuthed(true);
   }
 
   useEffect(() => {
@@ -43,7 +49,7 @@ export default function AdminPage() {
       body: JSON.stringify({ password }),
     });
     if (!response.ok) {
-      const data = await response.json();
+      const data = await readJson(response);
       setError(data.error || "Не удалось войти");
       return;
     }

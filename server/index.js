@@ -39,6 +39,9 @@ app.post("/api/leads", async (req, res) => {
     if (error.code === "VALIDATION") {
       return res.status(400).json({ error: error.message });
     }
+    if (error.code === "TURSO_CONFIG") {
+      return res.status(503).json({ error: error.message });
+    }
     console.error(error);
     res.status(500).json({ error: "Не удалось сохранить заявку" });
   }
@@ -74,8 +77,16 @@ app.get("/api/admin/me", requireAdmin, (req, res) => {
 });
 
 app.get("/api/leads", requireAdmin, async (req, res) => {
-  const leads = await listLeads();
-  res.json({ leads });
+  try {
+    const leads = await listLeads();
+    res.json({ leads });
+  } catch (error) {
+    if (error.code === "TURSO_CONFIG") {
+      return res.status(503).json({ error: error.message });
+    }
+    console.error(error);
+    res.status(500).json({ error: "Не удалось загрузить заявки" });
+  }
 });
 
 app.patch("/api/leads/:id", requireAdmin, async (req, res) => {
@@ -86,6 +97,9 @@ app.patch("/api/leads/:id", requireAdmin, async (req, res) => {
   } catch (error) {
     if (error.message === "INVALID_STATUS") {
       return res.status(400).json({ error: "Некорректный статус" });
+    }
+    if (error.code === "TURSO_CONFIG") {
+      return res.status(503).json({ error: error.message });
     }
     console.error(error);
     res.status(500).json({ error: "Не удалось обновить заявку" });
@@ -108,6 +122,12 @@ app.listen(port, () => {
     process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID
       ? `группа ${process.env.TELEGRAM_CHAT_ID}`
       : "не настроен (проверьте TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID в .env)"
+  );
+  console.log(
+    "Turso:",
+    process.env.TURSO_DATABASE_URL && process.env.TURSO_AUTH_TOKEN
+      ? "заявки в облачной SQLite"
+      : "не настроен (укажите TURSO_DATABASE_URL и TURSO_AUTH_TOKEN)"
   );
 });
 

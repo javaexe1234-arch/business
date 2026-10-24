@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { readJson } from "../api.js";
 
 const initial = {
   name: "",
@@ -22,7 +23,7 @@ export default function LeadForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, source: "form" }),
       });
-      const data = await response.json();
+      const data = await readJson(response);
       if (!response.ok) throw new Error(data.error || "Ошибка отправки");
       setForm(initial);
       setStatus({ type: "ok", text: "Заявка ушла. Продюсер напишет в рабочий день." });
