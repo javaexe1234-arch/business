@@ -1,0 +1,29 @@
+{
+  "name": "chertyozh-studio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -n server,client -c cyan,magenta \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "node --watch server/index.js",
+    "dev:client": "vite --config client/vite.config.js",
+    "build": "vite build --config client/vite.config.js",
+    "start": "cross-env NODE_ENV=production node server/index.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "framer-motion": "^12.4.7",
+    "lenis": "^1.2.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "vite": "^6.2.0"
+  }
+}
