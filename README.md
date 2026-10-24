@@ -25,6 +25,12 @@ npm start
 
 Сайт будет на `http://127.0.0.1:3001`.
 
+## Vercel
+
+Сборка кладёт статику в корневой `dist`. В настройках проекта Output Directory должен быть `dist` (это уже в `vercel.json`).
+
+Добавьте в Environment Variables те же ключи, что в `.env`: `ADMIN_PASSWORD`, `SESSION_SECRET`, `GEMINI_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`.
+
 ## Переменные `.env`
 
 | Ключ | Назначение |

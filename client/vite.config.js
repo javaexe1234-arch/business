@@ -18,7 +18,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: path.join(rootDir, "dist"),
+    outDir: path.join(rootDir, "../dist"),
     emptyOutDir: true,
   },
 });
